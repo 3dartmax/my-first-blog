@@ -1,1 +1,1 @@
-C:\Users\3dartmax\AppData\Local\Programs\Python\Python35-32\myvenv\Scripts\activate
+D:\WorkRoom\Django\girls\myvenv\Scripts\activate.bat
