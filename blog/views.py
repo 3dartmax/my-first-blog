@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
+#from django.utils import timezone
 from .models import Post
 from .forms import PostForm
 
@@ -19,7 +19,7 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
+            #post.published_date = timezone.now()
             post.save()
             return redirect('blog.views.post_detail', pk=post.pk)
     else:
