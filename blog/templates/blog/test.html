@@ -1,0 +1,43 @@
+============================================<br>
+NickName = {{ nickname|default:"null" }}<br>
+============================================<br>
+Age = {{ age|default:"0" }}<br>
+============================================<br>
+Data Count = {{ datas.count|default:"null" }}<br>
+{% for d in datas %}
+	{{ d.id }}. {{ d.title }} / {{ d.published_date }} / {{ d.author_id }} <br>
+{% endfor %}
+============================================<br>
+Auth Count = {{ auths.count|default:"null" }}<br>
+{% for u in auths %}
+	{{ u.id }}. {{ u.username }} / {{ u.email }}<br>
+{% endfor %}
+============================================<br>
+{% for d in datas %}
+	{{ forloopcounter0 }} - {% cycle 'A' 'B' 'C' %}<br>
+{% endfor %}
+============================================<br>
+{% with auths|slice:"0:1" as tt %}
+{{ tt.0.username }}<br>
+{% endwith %}
+{% with auths|slice:"1:2" as tt %}
+{{ tt.0.username }}<br>
+{% endwith %}
+---------------------------------------------<br>
+{% comment "./myvenv/Lib/site-packages/django/templatetags/customfilter.py" %}{% endcomment %}
+{% load customfilter %}
+{{ auths|listIndex:0 }}<br>
+{{ auths|listIndex:1 }}<br>
+---------------------------------------------<br>
+Data Count = {{ datas.count|default:"null" }}<br>
+{% for d in datas %}
+	{% with auths|dbTableData:d.author_id as dd %}
+	{% if dd != None %}
+		{{ d.author_id }}. {{ dd.username }}
+	{% else %}
+		{{ d.author_id }}. null
+	{% endif %}
+	{% endwith %}
+	/ {{ d.title }} / {{ d.published_date }}<br>
+{% endfor %}
+============================================<br>

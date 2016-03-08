@@ -81,6 +81,17 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',	# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#        'NAME': 'mysite',                      	# Or path to database file if using sqlite3.
+#        'USER': 'root',                      	# Not used with sqlite3.
+#        'PASSWORD': 'pass',                  	# Not used with sqlite3.
+#        'HOST': 'localhost',                  	# Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '3389',                      	# Set to empty string for default. Not used with sqlite3.
+#    }
+#}
+#DATABASE_OPTIONS = {'charset': 'utf8'}
 
 
 # Password validation
@@ -105,8 +116,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
+#TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
