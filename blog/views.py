@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+﻿from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
@@ -127,22 +127,123 @@ def post_test1_4(request):
 	</html>
 	""" % template.render(context)
 	return HttpResponse(html)
+	
+	
+#---------------------------------------------------------------------------
+# Test2
+#---------------------------------------------------------------------------
+import sys
+sys.getfilesystemencoding()
+
+from django.utils.encoding import iri_to_uri, uri_to_iri
+from django.utils.http import urlquote
+
+import os
+import json
+from django.core import serializers
+from django.http import JsonResponse, FileResponse
+
+def post_test2_1(request):
+	#absname   = os.path.dirname(os.path.abspath(__file__)) + r'\static\text\test.txt'	# 절대경로
+	#response  = FileResponse(open(absname, 'rb'))
+	#return HttpResponse(response)
+	
+	#localname = 'blog/static/text/test.txt'											# 상대경로
+	#response  = FileResponse(open(localname, 'rb'))
+	#return HttpResponse(response)
+	
+	#request.encoding = 'koi8-r'
+	text = '''name='김성환'&age=43'''
+	url  = iri_to_uri(text)
+	org  = uri_to_iri(url)
+	print('text -> url : ', url)
+	print('url -> text : ', org)
+	return HttpResponse('')
+	
+	
+def post_test2_2(request):	
+	srcData  = {'Name':'김성환'}
+	print(srcData)
+	jsonData = json.dumps(srcData)
+	print(jsonData)
+	destData = json.loads(jsonData)
+	print(destData)
+	return HttpResponse(destData['Name'])
+	
+	
+def post_test2_3(request):
+	#data = {}
+	#data['Name'] = '김성환'
+	#return HttpResponse(json.dumps(data), content_type='application/json')
+
+	tasks = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')[:2]
+	data = serializers.serialize('json', tasks)
+	return HttpResponse(data, content_type='application/json')
+	
+	
+def post_test2_4(request):
+	#srcData  = {'Name':'김성환'}
+	#response = JsonResponse(srcData, safe=False)
+	#print(response.content)
+	#return HttpResponse(response.content)
+	
+	destData = json.loads(uri_to_iri(b'''{"Name": "\uae40\uc131\ud658"}'''))
+	#destData = json.loads('''{"Name": "김성환"}''')
+	print(destData)
+	return HttpResponse(destData['Name'])
 
 	
+#---------------------------------------------------------------------------
+# Test2
+#---------------------------------------------------------------------------
+# http://127.0.0.1:8000/post/test3_1/?name=%EA%B9%80%EC%84%B1%ED%99%98&age=43	
+# http://127.0.0.1:8000/post/test3_1/?name=김성환&age=43
+def post_test3_1(request):
+	print(uri_to_iri('http://127.0.0.1:8000/post/test3_1/?name=%EA%B9%80%EC%84%B1%ED%99%98&age=43'))
+	print(iri_to_uri('http://127.0.0.1:8000/post/test3_1/?name=김성환&age=43'))
+	print('경로명 합치기 : ', os.path.join(r'D:\WorkRoom', r'Django', r'girls\blog'))			# D:\WorkRoom\Django\girls\blog
+	print('중간 경로 슬래쉬 제거 : ', os.path.normpath(r'D:\WorkRoom\Django\..\girls\blog'))	# D:\WorkRoom\girls\blog
 	
+	currpath   = os.getcwd()
+	absolutely = os.path.abspath(__file__)
+	relatively = os.path.relpath(absolutely, currpath)
+	dirname    = os.path.dirname(absolutely)
+	filename   = os.path.basename(__file__)
+	name       = request.GET.get('name', '')
+	age        = request.GET.get('age', 0)
+	template   = Template('''
+	<html>
+		<head>
+			<title>{{ module_name }}</title>
+		</head>
+		<body>
+			<ol>				
+				<li><strong>현재 실행경로 : {{ currpath }}</strong></li>
+				<li><strong>파일 절대경로 : {{ absolutely }}</strong></li>
+				<li><strong>파일 상대경로 : {{ relatively }}</strong></li>
+				<li><strong>폴더 절대경로 : {{ dirname }}</strong></li>
+				<li><strong>파일명 : {{ filename }}</strong></li>
+				<li><strong>이름 : {{ name }}</strong></li>
+				<li><strong>나이 : {{ age }}</strong></li>
+			</ol>
+		</body>
+	</html>
+	''')
+	context = Context({
+		'module_name':__name__,
+		'currpath':currpath.replace('\\', '/'),
+		'absolutely':absolutely.replace('\\', '/'),
+		'relatively':relatively.replace('\\', '/'),
+		'dirname':dirname.replace('\\', '/'),
+		'filename':filename,
+		'name':name,
+		'age':age})
+	return HttpResponse(template.render(context))
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	

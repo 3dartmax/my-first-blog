@@ -1,4 +1,4 @@
-============================================<br>
+﻿============================================<br>
 NickName = {{ nickname|default:"null" }}<br>
 ============================================<br>
 Age = {{ age|default:"0" }}<br>
@@ -24,7 +24,7 @@ Auth Count = {{ auths.count|default:"null" }}<br>
 {{ tt.0.username }}<br>
 {% endwith %}
 ---------------------------------------------<br>
-{% comment "./myvenv/Lib/site-packages/django/templatetags/customfilter.py" %}{% endcomment %}
+{% comment "파일위치 -> ./myvenv/Lib/site-packages/django/templatetags/customfilter.py" %}{% endcomment %}
 {% load customfilter %}
 {{ auths|listIndex:0 }}<br>
 {{ auths|listIndex:1 }}<br>

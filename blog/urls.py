@@ -12,4 +12,9 @@ urlpatterns = [
 	url(r'^post/test1_2/$', views.post_test1_2, name='post_test1_2'),
 	url(r'^post/test1_3/$', views.post_test1_3, name='post_test1_3'),
 	url(r'^post/test1_4/$', views.post_test1_4, name='post_test1_4'),
+	url(r'^post/test2_1/$', views.post_test2_1, name='post_test2_1'),
+	url(r'^post/test2_2/$', views.post_test2_2, name='post_test2_2'),
+	url(r'^post/test2_3/$', views.post_test2_3, name='post_test2_3'),
+	url(r'^post/test2_4/$', views.post_test2_4, name='post_test2_4'),
+	url(r'^post/test3_1/$', views.post_test3_1, name='post_test3_1'),
 ]
