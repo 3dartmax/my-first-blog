@@ -151,7 +151,7 @@ def post_test2_1(request):
 	#localname = 'blog/static/text/test.txt'											# 상대경로
 	#response  = FileResponse(open(localname, 'rb'))
 	#return HttpResponse(response)
-	
+
 	#request.encoding = 'koi8-r'
 	text = '''name='김성환'&age=43'''
 	url  = iri_to_uri(text)
@@ -164,7 +164,7 @@ def post_test2_1(request):
 def post_test2_2(request):	
 	srcData  = {'Name':'김성환'}
 	print(srcData)
-	jsonData = json.dumps(srcData)
+	jsonData = json.dumps(srcData, ensure_ascii=False)	# utf-8로 생성하기
 	print(jsonData)
 	destData = json.loads(jsonData)
 	print(destData)
@@ -194,7 +194,7 @@ def post_test2_4(request):
 
 	
 #---------------------------------------------------------------------------
-# Test2
+# Test3
 #---------------------------------------------------------------------------
 # http://127.0.0.1:8000/post/test3_1/?name=%EA%B9%80%EC%84%B1%ED%99%98&age=43	
 # http://127.0.0.1:8000/post/test3_1/?name=김성환&age=43
@@ -239,11 +239,69 @@ def post_test3_1(request):
 		'name':name,
 		'age':age})
 	return HttpResponse(template.render(context))
-	
-
-
-
-
-
 
 	
+import csv
+from django.contrib.auth.models import User
+
+# db테이블 정보로 csv파일 만들어 다운로드 받기.
+def post_test3_2(request):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="posts.csv"'
+	writer = csv.writer(response)
+	posts  = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')[:10]
+	for post in posts:
+		user = User.objects.get(id=post.author_id)
+		writer.writerow([post.id, post.title, post.created_date, post.published_date, user.username])
+	return response
+
+
+# csv파일을 웹페이지로 보여주기.
+def post_test3_3(request):
+	file  = open('blog/static/csv/test.csv', 'r', encoding='utf-8')
+	datas = list()
+	text  = file.readline()
+	while text:
+		data  = list()
+		texts = text.split(',')
+		for t in texts:
+			data.append(t)
+		if len(texts) > 0:
+			datas.append(data)
+		text = file.readline()
+	file.close()
+	print(datas)
+	template = Template('''
+	<html>
+		<head>
+			<title>{{ module_name }}</title>
+		</head>
+		<body>
+			<ol>
+				{% with ',' as split %}
+				{% for data in datas %}
+					<li><strong>
+						{% for column in data %}
+							{{ column }}
+							{% if not forloop.last %}
+								{{ split }}
+							{% endif %}
+						{% endfor %}
+					</strong></li>
+				{% endfor %}
+				{% endwith %}
+			</ol>
+		</body>
+	</html>
+	''')
+	context = Context({
+		'module_name':__name__,
+		'datas':datas})
+	return HttpResponse(template.render(context))
+
+
+# 이미지 파일을 읽어왔어 다운로드 할 수 있게 해준다.
+def post_test3_4(request):
+	file  = open('blog/static/image/rin01.png', 'rb')
+	return HttpResponse(file.read(), content_type='image/png')
+
