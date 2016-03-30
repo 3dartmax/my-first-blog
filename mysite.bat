@@ -1,1 +1,1 @@
-D:\WorkRoom\Django\girls\myvenv\Scripts\activate.bat
+D:\WorkRoom\Django\tutorial01\myvenv\Scripts\activate.bat

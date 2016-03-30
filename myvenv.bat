@@ -1,1 +1,0 @@
-D:\WorkRoom\Python\venv\mysite\myvenv\Scripts\activate.bat
